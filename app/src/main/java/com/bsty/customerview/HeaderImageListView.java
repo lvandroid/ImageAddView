@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -22,6 +23,7 @@ public class HeaderImageListView extends LinearLayout implements ItemListener {
     private SimpleDraweeView bigImgView;
     private RecyclerView recyclerView;
     LayoutInflater layoutInflater;
+    private int focusPosition;
 
     public HeaderImageListView(Context context) {
         this(context, null, 0);
@@ -50,32 +52,49 @@ public class HeaderImageListView extends LinearLayout implements ItemListener {
         adapter.setItemListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        TextView btnDel = mainView.findViewById(R.id.tv_delete);
+        btnDel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                adapter.remove(focusPosition);
+            }
+        });
     }
 
     public void setData(List<Uri> data) {
         if (adapter != null) {
             adapter.setData(data);
-            showBigImg(data.get(0));
+            focusPosition = 0;
+            showBigImg(data.get(0), focusPosition);
         }
     }
 
     public void addItem(Uri uri) {
         if (adapter != null) {
             adapter.addItem(uri);
-            showBigImg(uri);
+            focusPosition = adapter.getDataCount() - 1;
+            showBigImg(uri, focusPosition);
         }
     }
 
     @Override
-    public void showBigImg(Uri uri) {
+    public void showBigImg(Uri uri, int focus) {
         if (bigImgView != null) {
             bigImgView.setImageURI(uri);
+            focusPosition = focus;
         }
     }
+
 
     @Override
     public void addImg() {
         Toast.makeText(context, "添加图片", Toast.LENGTH_SHORT).show();
         addItem(Uri.parse("http://img.taopic.com/uploads/allimg/120707/201807-120FH3415789.jpg"));
+    }
+
+    @Override
+    public void setBtnColor(int position) {
+
     }
 }

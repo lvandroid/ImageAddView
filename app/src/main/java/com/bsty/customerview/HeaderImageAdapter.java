@@ -72,6 +72,12 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
+    public void remove(int position){
+        data.remove(position);
+//        notifyItemRemoved(position);
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -93,7 +99,7 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View v) {
                     if (itemListener != null) {
-                        itemListener.showBigImg(data.get(position));
+                        itemListener.showBigImg(data.get(position),position);
                     }
                 }
             });
