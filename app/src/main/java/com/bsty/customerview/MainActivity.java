@@ -27,5 +27,11 @@ public class MainActivity extends AppCompatActivity {
         content.addView(headView);
 
         headView.setData(uriList);
+
+        LinearLayout bottom = findViewById(R.id.ll_bottom);
+        BottomitemView bottomView = new BottomitemView(this);
+
+        bottom.addView(bottomView);
+        bottomView.setData(uriList);
     }
 }

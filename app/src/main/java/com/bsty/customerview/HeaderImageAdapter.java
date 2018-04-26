@@ -68,14 +68,66 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         notifyDataSetChanged();
     }
 
+    /**
+     * 向左移动，第一张不可移动
+     *
+     * @param position
+     */
     public void leftMove(int position) {
-
+        if (position == 0) {
+            return;
+        }
+        Uri tmp = data.get(position - 1);
+        data.set(position - 1, data.get(position));
+        data.set(position, tmp);
+        itemListener.showBigImg(data.get(position), position);
+        notifyDataSetChanged();
     }
 
-    public void remove(int position){
+    /**
+     * 向右移动图片，只有一张或者最后一张不可移动
+     *
+     * @param position
+     */
+    public void rightMove(int position) {
+        if (getDataCount()<=1)return;
+        if ( position == getDataCount() - 1) {
+            return;
+        }
+        Uri tmp = data.get(position + 1);
+        data.set(position + 1, data.get(position));
+        data.set(position, tmp);
+        itemListener.showBigImg(data.get(position), position);
+        notifyDataSetChanged();
+    }
+
+    public void replace(Uri uri, int position) {
+        if (data == null) {
+            return;
+        }
+        data.set(position, uri);
+        notifyItemChanged(position);
+    }
+
+    public void remove(int position) {
+        if (data.size() == 0)
+            return;
         data.remove(position);
+        //删除第一个位置时，焦点变为第二个
+
 //        notifyItemRemoved(position);
         notifyDataSetChanged();
+        if (itemListener == null) {
+            return;
+        }
+        //如果删除后列表回空，清除大图片显示
+        if (data.size() == 0) {
+            itemListener.showBigImg(null, 0);
+        } else if (position == data.size()) { //若果删除最后一张，则大图显示上一张图片
+            itemListener.showBigImg(data.get(position - 1), position - 1);
+        } else { //其他情况大图展示下一张图片
+            itemListener.showBigImg(data.get(position), position);
+        }
     }
 
     @NonNull
@@ -94,12 +146,11 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (holder instanceof ContentViewHolder) {
             SimpleDraweeView simpleDraweeView = ((ContentViewHolder) holder).imageView;
             simpleDraweeView.setImageURI(data.get(position));
-            itemListener.setBtnColor(position);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (itemListener != null) {
-                        itemListener.showBigImg(data.get(position),position);
+                        itemListener.showBigImg(data.get(position), position);
                     }
                 }
             });

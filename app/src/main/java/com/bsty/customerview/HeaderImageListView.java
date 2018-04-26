@@ -1,6 +1,7 @@
 package com.bsty.customerview;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,13 +18,19 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeaderImageListView extends LinearLayout implements ItemListener {
+public class HeaderImageListView extends LinearLayout implements ItemListener, View.OnClickListener {
     HeaderImageAdapter adapter;
     private Context context;
     private SimpleDraweeView bigImgView;
     private RecyclerView recyclerView;
     LayoutInflater layoutInflater;
     private int focusPosition;
+
+    private TextView btnDel;
+    private TextView btnRMove;
+    private TextView btnLMove;
+    private TextView btnReplace;
+    private TextView tvImgDes;
 
     public HeaderImageListView(Context context) {
         this(context, null, 0);
@@ -53,13 +60,17 @@ public class HeaderImageListView extends LinearLayout implements ItemListener {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        TextView btnDel = mainView.findViewById(R.id.tv_delete);
-        btnDel.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                adapter.remove(focusPosition);
-            }
-        });
+
+        btnDel = mainView.findViewById(R.id.tv_delete);
+        btnLMove = mainView.findViewById(R.id.tv_left_move);
+        btnRMove = mainView.findViewById(R.id.tv_right_move);
+        btnReplace = mainView.findViewById(R.id.tv_replace);
+        tvImgDes = mainView.findViewById(R.id.tv_img_des);
+
+        btnDel.setOnClickListener(this);
+        btnLMove.setOnClickListener(this);
+        btnRMove.setOnClickListener(this);
+        btnReplace.setOnClickListener(this);
     }
 
     public void setData(List<Uri> data) {
@@ -84,6 +95,8 @@ public class HeaderImageListView extends LinearLayout implements ItemListener {
             bigImgView.setImageURI(uri);
             focusPosition = focus;
         }
+        setBtnColor(focus);
+        setBigImgDes();
     }
 
 
@@ -93,8 +106,64 @@ public class HeaderImageListView extends LinearLayout implements ItemListener {
         addItem(Uri.parse("http://img.taopic.com/uploads/allimg/120707/201807-120FH3415789.jpg"));
     }
 
+    /**
+     * 设置操作按钮字体颜色
+     *
+     * @param focus
+     */
     @Override
-    public void setBtnColor(int position) {
+    public void setBtnColor(int focus) {
+        //设置btn颜色
+        if (adapter.getDataCount() == 0) {
+            btnDel.setTextColor(Color.GRAY);
+            btnReplace.setTextColor(Color.GRAY);
+            btnLMove.setTextColor(Color.GRAY);
+            btnRMove.setTextColor(Color.GRAY);
+        } else {
+            btnDel.setTextColor(Color.RED);
+            btnReplace.setTextColor(Color.BLUE);
+            if (focus == 0) {
+                btnLMove.setTextColor(Color.GRAY);
+                btnRMove.setTextColor(Color.BLUE);
+            } else if (focus == adapter.getDataCount() - 1) {
+                btnRMove.setTextColor(Color.GRAY);
+                btnLMove.setTextColor(Color.BLUE);
+            } else {
+                btnLMove.setTextColor(Color.BLUE);
+                btnRMove.setTextColor(Color.BLUE);
+            }
+        }
+    }
 
+    /**
+     * 设置大图描述信息
+     */
+    @Override
+    public void setBigImgDes() {
+        if (adapter.getDataCount() == 0) {
+            tvImgDes.setVisibility(GONE);
+        } else {
+            tvImgDes.setVisibility(VISIBLE);
+        }
+        tvImgDes.setText(String.format("共%d张， 当前第%d张", adapter.getDataCount(), focusPosition + 1));
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_delete:
+                adapter.remove(focusPosition);
+                break;
+            case R.id.tv_replace:
+                adapter.replace(null, focusPosition);
+                break;
+            case R.id.tv_left_move:
+                adapter.leftMove(focusPosition);
+                break;
+            case R.id.tv_right_move:
+                adapter.rightMove(focusPosition);
+                break;
+        }
     }
 }
