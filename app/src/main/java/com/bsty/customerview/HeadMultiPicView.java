@@ -18,8 +18,8 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HeaderImageListView extends LinearLayout implements ItemListener, View.OnClickListener {
-    HeaderImageAdapter adapter;
+public class HeadMultiPicView extends LinearLayout implements HeadMultiPicItemListener, View.OnClickListener {
+    HeadMultiPicAdapter adapter;
     private Context context;
     private SimpleDraweeView bigImgView;
     private RecyclerView recyclerView;
@@ -32,15 +32,15 @@ public class HeaderImageListView extends LinearLayout implements ItemListener, V
     private TextView btnReplace;
     private TextView tvImgDes;
 
-    public HeaderImageListView(Context context) {
+    public HeadMultiPicView(Context context) {
         this(context, null, 0);
     }
 
-    public HeaderImageListView(Context context, @Nullable AttributeSet attrs) {
+    public HeadMultiPicView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public HeaderImageListView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public HeadMultiPicView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         init();
@@ -55,8 +55,8 @@ public class HeaderImageListView extends LinearLayout implements ItemListener, V
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context);
         layoutManager.setOrientation(HORIZONTAL);
-        adapter = new HeaderImageAdapter(new ArrayList<Uri>(), context);
-        adapter.setItemListener(this);
+        adapter = new HeadMultiPicAdapter(new ArrayList<Uri>(), context);
+        adapter.setHeadMultiPicItemListener(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 

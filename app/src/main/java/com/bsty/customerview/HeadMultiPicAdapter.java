@@ -12,7 +12,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.List;
 
-public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HeadMultiPicAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int TYPE_CONTENT = 1;
     private static final int TYPE_FOOTER = 2;
 
@@ -22,12 +22,12 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private List<Uri> data;
 
 
-    private ItemListener itemListener;
+    private HeadMultiPicItemListener headMultiPicItemListener;
     private Context context;
     private LayoutInflater layoutInflater;
 
-    public void setItemListener(ItemListener itemListener) {
-        this.itemListener = itemListener;
+    public void setHeadMultiPicItemListener(HeadMultiPicItemListener headMultiPicItemListener) {
+        this.headMultiPicItemListener = headMultiPicItemListener;
     }
 
     public int getDataCount() {
@@ -52,7 +52,7 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         }
     }
 
-    public HeaderImageAdapter(List<Uri> data, Context context) {
+    public HeadMultiPicAdapter(List<Uri> data, Context context) {
         this.data = data;
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
@@ -80,7 +80,7 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Uri tmp = data.get(position - 1);
         data.set(position - 1, data.get(position));
         data.set(position, tmp);
-        itemListener.showBigImg(data.get(position), position);
+        headMultiPicItemListener.showBigImg(data.get(position), position);
         notifyDataSetChanged();
     }
 
@@ -97,7 +97,7 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         Uri tmp = data.get(position + 1);
         data.set(position + 1, data.get(position));
         data.set(position, tmp);
-        itemListener.showBigImg(data.get(position), position);
+        headMultiPicItemListener.showBigImg(data.get(position), position);
         notifyDataSetChanged();
     }
 
@@ -117,16 +117,16 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 //        notifyItemRemoved(position);
         notifyDataSetChanged();
-        if (itemListener == null) {
+        if (headMultiPicItemListener == null) {
             return;
         }
         //如果删除后列表回空，清除大图片显示
         if (data.size() == 0) {
-            itemListener.showBigImg(null, 0);
+            headMultiPicItemListener.showBigImg(null, 0);
         } else if (position == data.size()) { //若果删除最后一张，则大图显示上一张图片
-            itemListener.showBigImg(data.get(position - 1), position - 1);
+            headMultiPicItemListener.showBigImg(data.get(position - 1), position - 1);
         } else { //其他情况大图展示下一张图片
-            itemListener.showBigImg(data.get(position), position);
+            headMultiPicItemListener.showBigImg(data.get(position), position);
         }
     }
 
@@ -149,8 +149,8 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (itemListener != null) {
-                        itemListener.showBigImg(data.get(position), position);
+                    if (headMultiPicItemListener != null) {
+                        headMultiPicItemListener.showBigImg(data.get(position), position);
                     }
                 }
             });
@@ -158,8 +158,8 @@ public class HeaderImageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (itemListener != null) {
-                        itemListener.addImg();
+                    if (headMultiPicItemListener != null) {
+                        headMultiPicItemListener.addImg();
                     }
                 }
             });

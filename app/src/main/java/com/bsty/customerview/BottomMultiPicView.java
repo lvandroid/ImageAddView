@@ -10,24 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class BottomitemView extends LinearLayout {
+public class BottomMultiPicView extends LinearLayout {
     private Context context;
     private LayoutInflater layoutInflater;
     private RecyclerView recyclerView;
-    private BottomImgAdapter adapter;
+    private BottomMultiPicAdapter adapter;
+    private int initNum = 5;
 
-    public BottomitemView(Context context) {
+    public BottomMultiPicView(Context context) {
         this(context, null);
     }
 
-    public BottomitemView(Context context, @Nullable AttributeSet attrs) {
+    public BottomMultiPicView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public BottomitemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public BottomMultiPicView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
@@ -37,7 +37,8 @@ public class BottomitemView extends LinearLayout {
     private void init() {
         View mainView = layoutInflater.inflate(R.layout.view_bottom_list, null, false);
         recyclerView = mainView.findViewById(R.id.rv_bottom_img_list);
-        adapter = new BottomImgAdapter(new ArrayList<Uri>(), context);
+
+        adapter = new BottomMultiPicAdapter(context);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
         linearLayoutManager.setOrientation(VERTICAL);
@@ -54,10 +55,11 @@ public class BottomitemView extends LinearLayout {
         adapter.insertData(uri, position);
     }
 
-    public void setData(List<Uri> uriList) {
+    public void setData(List<BottomMultiPicItemVo> uriList) {
         if (adapter == null) {
             return;
         }
-        adapter.setData(uriList);
+        adapter.addAllData(uriList);
     }
+
 }

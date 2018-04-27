@@ -2,18 +2,18 @@ package com.bsty.customerview;
 
 import android.net.Uri;
 
-public class BottomItemVo {
+public class BottomMultiPicItemVo {
     private int index;
     private Uri uri;
 
-    public BottomItemVo(int index, Uri uri) {
+    public BottomMultiPicItemVo(int index, Uri uri) {
         this.index = index;
         this.uri = uri;
     }
 
     @Override
     public String toString() {
-        return "BottomItemVo{" +
+        return "BottomMultiPicItemVo{" +
                 "index=" + index +
                 ", uri=" + uri +
                 '}';
